@@ -1,0 +1,7 @@
+input_select:
+  test_integration_selector:
+    name: Test Integration Selector
+    options:
+      - "Geht"
+      - "Geht Nicht"
+      - "Orange"
