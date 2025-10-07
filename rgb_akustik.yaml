@@ -1,0 +1,31 @@
+input_boolean:
+  farbzyklus_akustikpaneel:
+    name: Farbzyklus Akustikpaneel
+    icon: mdi:palette
+
+automation:
+  - alias: "RGB-Farbzyklus Akustikpaneel (zufällig)"
+    description: "Lässt die RGBW-Lampe durch zufällige Farben gleiten, solange der Helper aktiviert ist."
+    mode: restart
+    triggers:
+      - trigger: state
+        entity_id: input_boolean.farbzyklus_akustikpaneel
+        to: "on"
+    action:
+      - repeat:
+          while:
+            - condition: state
+              entity_id: input_boolean.farbzyklus_akustikpaneel
+              state: "on"
+          sequence:
+            - action: light.turn_on
+              data:
+                transition: 8
+                rgbw_color:
+                  - "{ { range(0, 256) | random } }" # Zufälliges Rot
+                  - "{ { range(0, 256) | random } }" # Zufälliges Grün
+                  - "{ { range(0, 256) | random } }" # Zufälliges Blau
+                  - 0 # Weiß aus
+              target:
+                entity_id: light.akustikpaneel_seite_rgbw_light_0
+            - delay: "00:00:10"
