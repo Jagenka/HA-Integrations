@@ -21,108 +21,109 @@ template:
             {{ ((pv - verbrauch) + zusatzverbrauch) | round(1) }}
           {% endif %}
 
-blueprint:
-  name: Überschussbasierte Verbrauchersteuerung (intelligent)
-  description: >
-    Schaltet einen Helper basierend auf dem effektiven PV-Überschuss.
-    Berücksichtigt Speicherstatus, Hysterese, Mindestdauer und Verbraucher-Gruppe.
-    Nutzt den intelligenten Sensor "sensor.intelligenter_solarueberschuss".
-
-  domain: automation
-  input:
-    helper:
-      name: Ziel-Helper
-      selector:
-        entity:
-          filter:
-            - domain: input_boolean
-
-    ueberschuss_sensor:
-      name: Intelligenter Überschuss-Sensor (W)
-      selector:
-        entity:
-          filter:
-            - domain: sensor
-
-    obere_schwelle:
-      name: Einschalten ab Überschuss (W)
-      default: 800
-      selector:
-        number:
-          min: 0
-          max: 10000
-          step: 10
-
-    untere_schwelle:
-      name: Ausschalten unter Überschuss (W)
-      default: 700
-      selector:
-        number:
-          min: 0
-          max: 10000
-          step: 10
-
-    mindestdauer:
-      name: Mindestdauer in Minuten
-      default: 1
-      selector:
-        number:
-          min: 0
-          max: 60
-          unit_of_measurement: min
-
-    speicher_sensor:
-      name: Speicherstand (Prozent)
-      selector:
-        entity:
-          filter:
-            - domain: sensor
-
-    speicher_schwelle:
-      name: Mindest-SOC (Speicher voll) in %
-      default: 99
-      selector:
-        number:
-          min: 0
-          max: 100
-          step: 1
-
-mode: restart
-
-triggers:
-  - trigger: numeric_state
-    entity_id: !input ueberschuss_sensor
-    above: !input obere_schwelle
-    for:
-      minutes: !input mindestdauer
-
-  - trigger: numeric_state
-    entity_id: !input ueberschuss_sensor
-    below: !input untere_schwelle
-    for:
-      minutes: !input mindestdauer
-
-condition: []
-
-action:
-  - choose:
-      - conditions:
-          - condition: numeric_state
-            entity_id: !input ueberschuss_sensor
-            above: !input obere_schwelle
-          - condition: numeric_state
-            entity_id: !input speicher_sensor
-            above: !input speicher_schwelle
-        sequence:
-          - action: input_boolean.turn_on
-            target:
-              entity_id: !input helper
-
-      - conditions:
-          - condition: numeric_state
-            entity_id: !input ueberschuss_sensor
-            below: !input untere_schwelle
-        sequence:
-          - action: input_boolean.turn_off
-            target:
-              entity_id: !input helper
+#blueprint:
+#  name: Überschussbasierte Verbrauchersteuerung (intelligent)
+#  description: >
+#    Schaltet einen Helper basierend auf dem effektiven PV-Überschuss.
+#    Berücksichtigt Speicherstatus, Hysterese, Mindestdauer und Verbraucher-Gruppe.
+#    Nutzt den intelligenten Sensor "sensor.intelligenter_solarueberschuss".
+#
+#  domain: automation
+#  input:
+#    helper:
+#      name: Ziel-Helper
+#      selector:
+#        entity:
+#          filter:
+#            - domain: input_boolean
+#
+#    ueberschuss_sensor:
+#      name: Intelligenter Überschuss-Sensor (W)
+#      selector:
+#        entity:
+#          filter:
+#            - domain: sensor
+#
+#    obere_schwelle:
+#      name: Einschalten ab Überschuss (W)
+#      default: 800
+#      selector:
+#        number:
+#          min: 0
+#          max: 10000
+#          step: 10
+#
+#    untere_schwelle:
+#      name: Ausschalten unter Überschuss (W)
+#      default: 700
+#      selector:
+#        number:
+#          min: 0
+#          max: 10000
+#          step: 10
+#
+#    mindestdauer:
+#      name: Mindestdauer in Minuten
+#      default: 1
+#      selector:
+#        number:
+#          min: 0
+#          max: 60
+#          unit_of_measurement: min
+#
+#    speicher_sensor:
+#      name: Speicherstand (Prozent)
+#      selector:
+#        entity:
+#          filter:
+#            - domain: sensor
+#
+#    speicher_schwelle:
+#      name: Mindest-SOC (Speicher voll) in %
+#      default: 99
+#      selector:
+#        number:
+#          min: 0
+#          max: 100
+#          step: 1
+#
+#mode: restart
+#
+#triggers:
+#  - trigger: numeric_state
+#    entity_id: !input ueberschuss_sensor
+#    above: !input obere_schwelle
+#    for:
+#      minutes: !input mindestdauer
+#
+#  - trigger: numeric_state
+#    entity_id: !input ueberschuss_sensor
+#    below: !input untere_schwelle
+#    for:
+#      minutes: !input mindestdauer
+#
+#condition: []
+#
+#action:
+#  - choose:
+#      - conditions:
+#          - condition: numeric_state
+#            entity_id: !input ueberschuss_sensor
+#            above: !input obere_schwelle
+#          - condition: numeric_state
+#            entity_id: !input speicher_sensor
+#            above: !input speicher_schwelle
+#        sequence:
+#          - action: input_boolean.turn_on
+#            target:
+#              entity_id: !input helper
+#
+#      - conditions:
+#          - condition: numeric_state
+#            entity_id: !input ueberschuss_sensor
+#            below: !input untere_schwelle
+#        sequence:
+#          - action: input_boolean.turn_off
+#            target:
+#              entity_id: !input helper
+#
