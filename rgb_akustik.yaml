@@ -40,6 +40,7 @@ automation:
             ] %}
             {% set color = colors | random %}
             {{ [color[0], color[1], color[2], 0] }}
+          brightness: 128
           transition: 8
     mode: single
     max_exceeded: silent
