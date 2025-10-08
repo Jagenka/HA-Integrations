@@ -21,11 +21,23 @@ automation:
         target:
           entity_id: light.akustikpaneel_seite_rgbw_light_0
         data:
-          rgbw_color:
-            - "{{ range(180, 256) | random }}"
-            - "{{ range(180, 256) | random }}"
-            - "{{ range(180, 256) | random }}"
-            - 0
+          rgbw_color: >
+            {% set colors = [
+              [255, 0, 0],     
+              [255, 127, 0],   
+              [255, 255, 0],   
+              [127, 255, 0],   
+              [0, 255, 0],     
+              [0, 255, 127],   
+              [0, 255, 255],   
+              [0, 127, 255],   
+              [0, 0, 255],     
+              [127, 0, 255],   
+              [255, 0, 255],   
+              [255, 0, 127]    
+            ] %}
+            {% set color = colors | random %}
+            {{ [color[0], color[1], color[2], 0] }}
           transition: 8
     mode: single
     max_exceeded: silent
